@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -65,6 +66,19 @@ public class Vendedor {
 
     private Date dataDemissao;
 
+    @OneToMany(mappedBy = "vendedor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Comissao> comissao;
+
+    @OneToMany(mappedBy = "vendedorCliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Cliente> clientes;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "VendedorVenda",
+            joinColumns = @JoinColumn(name = "idvendedorvenda"),
+            inverseJoinColumns = @JoinColumn(name = "idvendavendedor")
+    )
+    private List<Venda> vendas;
 
 
 

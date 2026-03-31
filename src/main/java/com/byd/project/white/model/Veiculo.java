@@ -53,4 +53,8 @@ public class Veiculo {
     private String placaCarro;
 
     private Date dataSaida;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idveiculovenda")
+    private Venda vendaVeiculo;
 }

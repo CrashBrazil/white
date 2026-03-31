@@ -1,10 +1,7 @@
 package com.byd.project.white.model;
 
 import com.byd.project.white.model.enums.TipoStatus;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,6 +28,10 @@ public class Comissao {
     private TipoStatus status;
 
     private BigDecimal valorComissaoFinal;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idVendedor", nullable = false)
+    private Vendedor vendedor;
 
 
 }

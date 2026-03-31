@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.Length;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -58,6 +59,15 @@ public class Cliente {
     private String cep;
 
     private String numeroResidencia;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idVendedorCliente", nullable = false)
+    private Vendedor vendedorCliente;
+
+    @OneToMany(mappedBy = "ClienteVenda")
+    private List<Venda> VendaCliente;
+
+
 
 
 
