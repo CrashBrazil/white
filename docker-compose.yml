@@ -1,0 +1,40 @@
+version: '3.9'
+services:
+  white:
+    image: white:5.0
+    depends_on:
+      - mysql
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      - target: 8080
+        published: 8080
+        mode: ingress
+    environment:
+        MYSQL_ROOT: "root"
+        MYSQL_ROOT_PASSWORD: "CrashDocker"
+        MYSQL_URL: "jdbc:mysql://mysql:3306/white?createDatabaseIfNotExist=true"
+    networks:
+      - white_byd
+
+  mysql:
+    image: mysql:9.6.0
+    environment:
+        MYSQL_ROOT_HOST: '%'
+        MYSQL_ROOT_PASSWORD: "CrashDocker"
+        MYSQL_DATABASE: white 
+    deploy:
+      mode: replicated
+      replicas: 1
+    ports:
+      - "8921:3306"
+    networks:
+      - white_byd
+    volumes:
+      - whitedados:/var/lib/mysql 
+
+volumes:
+  whitedados:
+networks:
+  white_byd:
