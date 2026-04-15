@@ -86,3 +86,10 @@ JSON - {
 ```bash
 git clone [https://github.com/CrashBrazil/white]
 cd white
+
+**Equipe:
+Pedro Henrique Alves Lessa - 01638620
+Felipe de Lima Passos - 01647492
+Yuri Cordeiro Mascarenhas - 01327348
+Giorgio Rafael Ataide Guimarães - 01620989
+Matheus Venâncio da Silva - 01628426**
