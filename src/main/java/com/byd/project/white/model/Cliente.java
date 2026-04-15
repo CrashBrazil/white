@@ -1,22 +1,29 @@
 package com.byd.project.white.model;
 
+import com.byd.project.white.model.enums.TipoCargo;
 import com.byd.project.white.model.enums.TipoSexo;
+import com.byd.project.white.repository.ClienteRepository;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.Length;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
+
 @Data
 @Entity
-public class Cliente {
+public class Cliente implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -25,6 +32,9 @@ public class Cliente {
     @NotNull
     @Column(length = 25, unique = true)
     private String emailCliente;
+
+    @NotNull
+    private String senhaCliente;
 
     @NotNull
     @Column(length = 11)
@@ -58,17 +68,36 @@ public class Cliente {
     @NotNull
     private String cep;
 
+    @NotNull
+    private TipoCargo cargoCliente;
+
     private String numeroResidencia;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idVendedorCliente", nullable = false)
+    //nullable = false
+    @JoinColumn(name = "idVendedorCliente")
     private Vendedor vendedorCliente;
 
     @OneToMany(mappedBy = "ClienteVenda")
     private List<Venda> VendaCliente;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.cargoCliente == TipoCargo.CLIENTE){
+            return List.of(new SimpleGrantedAuthority("ROLE_CLIENTE"));
+        }
+        else{
+            return List.of(new SimpleGrantedAuthority("ROLE_VENDEDOR"));
+        }
+    }
 
+    @Override
+    public String getPassword() {
+        return this.senhaCliente;
+    }
 
-
-
+    @Override
+    public String getUsername() {
+        return this.emailCliente;
+    }
 }
