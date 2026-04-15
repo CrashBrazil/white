@@ -1,6 +1,8 @@
 package com.byd.project.white.model;
 
 import com.byd.project.white.model.enums.TipoSexo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -60,10 +62,13 @@ public class Cliente {
 
     private String numeroResidencia;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idVendedorCliente", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Vendedor vendedorCliente;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "ClienteVenda")
     private List<Venda> VendaCliente;
 
