@@ -6,7 +6,7 @@ Sistema backend para gestão de vendas automotivas desenvolvido com Spring Boot.
 
 ## Tecnologia utilizadas
 
-- **Java 21**
+- **Java 25**
 - **Spring Boot 3.4.5**
 - **Spring Data JPA** - Persistência de dados
 - **Spring Security** - Autenticação e autorização
