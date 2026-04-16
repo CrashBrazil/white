@@ -32,7 +32,7 @@ public class ClienteController {
     }
 
     @GetMapping("/teste")
-    public String authorized(@RequestParam String code) {
+    public String authorized(@RequestParam("code") String code) {
         return "Código recebido: " + code;
     }
 }
