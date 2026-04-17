@@ -11,30 +11,21 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class DtoClienteRegistrarRequisicao {
-    private String emailCliente;
-    private String senhaCliente;
-    private String telefoneCliente;
-    private TipoSexo sexoCliente;
-    private Date dataNascimentoCliente;
     private String nomeCompletoCliente;
+    private String emailCliente;
+    private String telefoneCliente;
+    private String sexoCliente;
+    private Date dataNascimentoCliente;
     private String tipoMoradia;
-    private String complemento;
     private String cidade;
     private String endereco;
     private String cep;
-    private String numeroResidencia;
-    @ManyToOne(fetch = FetchType.LAZY)
-    //nullable = false
-    @JoinColumn(name = "idVendedorCliente")
-    private Vendedor vendedorCliente;
-
-    @OneToMany(mappedBy = "ClienteVenda")
-    private List<Venda> VendaCliente;
-
+    private UUID idVendedor;
 }

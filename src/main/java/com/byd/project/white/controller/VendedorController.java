@@ -1,19 +1,19 @@
 package com.byd.project.white.controller;
-
-import com.byd.project.white.dto.DtoVendedor;
+import com.byd.project.white.requisicao.DtoVendedor;
 import com.byd.project.white.service.VendedorService;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/vendedores")
+@AllArgsConstructor
 public class VendedorController {
 
-    @Autowired
-    private VendedorService service;
+
+    private final VendedorService service;
 
     @PostMapping
     public DtoVendedor criar(@RequestBody DtoVendedor dto) {

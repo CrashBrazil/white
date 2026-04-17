@@ -1,11 +1,13 @@
 package com.byd.project.white.service;
 
-import com.byd.project.white.dto.DtoVendedor;
+
+import com.byd.project.white.mapstruct.Conversor;
 import com.byd.project.white.model.Vendedor;
 import com.byd.project.white.repository.VendedorRepository;
-import com.byd.project.white.util.MapStruct;
+
+import com.byd.project.white.requisicao.DtoVendedor;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class VendedorService {
     private final VendedorRepository vendedorRepository;
-    private final MapStruct mapStruct;
+    private final Conversor mapStruct;
 
     public DtoVendedor criar(DtoVendedor dto) {
         Vendedor vendedor = mapStruct.toEntity(dto);
