@@ -3,6 +3,7 @@ package com.byd.project.white.model;
 import com.byd.project.white.model.enums.TipoCargo;
 import com.byd.project.white.model.enums.TipoSexo;
 import com.byd.project.white.repository.ClienteRepository;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -75,7 +76,8 @@ public class Cliente implements UserDetails {
 
     @ManyToOne(fetch = FetchType.LAZY)
     //nullable = false
-    @JoinColumn(name = "idVendedorCliente")
+    @JoinColumn(name = "idVendedorCliente",nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Vendedor vendedorCliente;
 
     @OneToMany(mappedBy = "ClienteVenda")
