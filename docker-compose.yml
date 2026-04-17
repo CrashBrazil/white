@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   white:
-    image: white:5.0
+    image: white:10.0
     depends_on:
       - mysql
     deploy:
@@ -15,6 +15,7 @@ services:
         MYSQL_ROOT: "root"
         MYSQL_ROOT_PASSWORD: "CrashDocker"
         MYSQL_URL: "jdbc:mysql://mysql:3306/white?createDatabaseIfNotExist=true"
+        CHAVE: "mano"
     networks:
       - white_byd
 

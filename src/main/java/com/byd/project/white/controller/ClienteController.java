@@ -1,42 +1,23 @@
 package com.byd.project.white.controller;
 
-import com.byd.project.white.dto.DtoCliente;
+import com.byd.project.white.model.Cliente;
+import com.byd.project.white.requisicao.DtoClienteRegistrarRequisicao;
+import com.byd.project.white.resposta.DtoClienteRegistrarResposta;
 import com.byd.project.white.service.ClienteService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.byd.project.white.mapstruct.MapStruct;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
-
 @RestController
-@RequestMapping("/clientes")
+@RequestMapping("White")
+@RequiredArgsConstructor
 public class ClienteController {
+    private final ClienteService clienteService;
 
-    @Autowired
-    private ClienteService service;
-
-    @PostMapping
-    public DtoCliente criar(@RequestBody DtoCliente dto) {
-        return service.criar(dto);
-    }
-
-    @GetMapping
-    public List<DtoCliente> listar() {
-        return service.listar();
-    }
-
-    @GetMapping("/{id}")
-    public DtoCliente buscarPorId(@PathVariable UUID id) {
-        return service.buscarPorId(id);
-    }
-
-    @PutMapping("/{id}")
-    public DtoCliente atualizar(@PathVariable UUID id, @RequestBody DtoCliente dto) {  // ← Recebe DtoCliente
-        return service.atualizar(id, dto);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deletar(@PathVariable UUID id) {
-        service.deletar(id);
+    @GetMapping("/teste")
+    public String authorized(@RequestParam("code") String code) {
+        return "Código recebido: " + code;
     }
 }
