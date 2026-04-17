@@ -7,34 +7,30 @@ import com.byd.project.white.model.enums.TipoSexo;
 import com.byd.project.white.repository.ClienteRepository;
 import com.byd.project.white.repository.VendedorRepository;
 import com.byd.project.white.util.MapStruct;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class ClienteService {
 
-    @Autowired
-    private ClienteRepository repository;
+    private final ClienteRepository repository;
+    private final VendedorRepository vendedorRepository;
+    private final MapStruct mapStruct;
 
-    @Autowired
-    private VendedorRepository vendedorRepository;
-
-    @Autowired
-    private MapStruct mapStruct;
 
     public DtoCliente criar(DtoCliente dto) {
         Vendedor vendedor = vendedorRepository.findById(dto.getIdVendedor())
                 .orElseThrow(() -> new RuntimeException("Vendedor não encontrado!"));
-
-        Cliente cliente = mapStruct.toEntity(dto);  // Converte DTO para Entity
+        Cliente cliente = mapStruct.toEntity(dto);
         cliente.setSexoCliente(TipoSexo.valueOf(dto.getSexoCliente()));
         cliente.setVendedorCliente(vendedor);
 
         Cliente savedCliente = repository.save(cliente);
-        return mapStruct.toDto(savedCliente);  // ✅ Retorna DtoCliente
+        return mapStruct.toDto(savedCliente);
     }
 
     public List<DtoCliente> listar() {
@@ -52,7 +48,7 @@ public class ClienteService {
         Cliente cliente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
-        // Atualiza campos
+
         if (dto.getNomeCompletoCliente() != null)
             cliente.setNomeCompletoCliente(dto.getNomeCompletoCliente());
         if (dto.getEmailCliente() != null)
@@ -76,7 +72,7 @@ public class ClienteService {
         return mapStruct.toDto(updatedCliente);
     }
 
-    // ✅ CORRETO: Retorna void
+
     public void deletar(UUID id) {
         repository.deleteById(id);
     }

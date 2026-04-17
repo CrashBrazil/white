@@ -4,6 +4,7 @@ import com.byd.project.white.dto.DtoVendedor;
 import com.byd.project.white.model.Vendedor;
 import com.byd.project.white.repository.VendedorRepository;
 import com.byd.project.white.util.MapStruct;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +12,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class VendedorService {
-
-    @Autowired
-    private VendedorRepository vendedorRepository;
-
-    @Autowired
-    private MapStruct mapStruct;
+    private final VendedorRepository vendedorRepository;
+    private final MapStruct mapStruct;
 
     public DtoVendedor criar(DtoVendedor dto) {
         Vendedor vendedor = mapStruct.toEntity(dto);
@@ -39,7 +37,6 @@ public class VendedorService {
         Vendedor vendedor = vendedorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Vendedor não encontrado"));
 
-        // Atualiza campos não nulos
         if (dto.getNomeCompleto() != null) vendedor.setNomeCompleto(dto.getNomeCompleto());
         if (dto.getEndereco() != null) vendedor.setEndereco(dto.getEndereco());
         if (dto.getTelefone() != null) vendedor.setTelefone(dto.getTelefone());
