@@ -20,7 +20,6 @@ public class Comissao {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idComissao;
 
-    // Já dividido
     @NotNull
     private BigDecimal taxa;
 
