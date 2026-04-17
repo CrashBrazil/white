@@ -14,26 +14,10 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 @Service
 @RequiredArgsConstructor
-public class ClienteService implements ClienteServiceInterface {
-    public final ClienteRepository clienteRepository;
-    public final BCryptPasswordEncoder bCryptPasswordEncoder;
+public class ClienteService {
 
 
-    @Override
-    public Cliente registrar(DtoClienteRegistrarRequisicao dtoClienteRegistrarRequisicao) throws SQLIntegrityConstraintViolationException {
-        Cliente cliente = MapStruct.INSTANCE.converterparaCliente(dtoClienteRegistrarRequisicao);
-        String encriptacao = bCryptPasswordEncoder.encode(cliente.getSenhaCliente());
 
-        if(clienteRepository.findByEmailCliente(cliente.getEmailCliente()).isPresent()){
-            throw new SQLIntegrityConstraintViolationException();
-        }
-        else if(dtoClienteRegistrarRequisicao != null && cliente.getSenhaCliente().length()>7){
-            cliente.setSenhaCliente(encriptacao);
-            cliente.setCargoCliente(TipoCargo.CLIENTE);
-            return clienteRepository.save(cliente);
-        }
-        return null;
-    }
 
 
 

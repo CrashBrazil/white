@@ -16,21 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class ClienteController {
     private final ClienteService clienteService;
 
-    @PostMapping(path = "/Registro")
-    public ResponseEntity<DtoClienteRegistrarResposta> clienteResponseEntity(@RequestBody DtoClienteRegistrarRequisicao dtoClienteRegistrarRequisicao){
-        try{
-            Cliente cliente = clienteService.registrar(dtoClienteRegistrarRequisicao);
-            if (cliente != null) {
-                return new ResponseEntity<>(MapStruct.INSTANCE.converterCliente(dtoClienteRegistrarRequisicao), HttpStatus.CREATED);
-            }
-            else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-    }
-
     @GetMapping("/teste")
     public String authorized(@RequestParam("code") String code) {
         return "Código recebido: " + code;

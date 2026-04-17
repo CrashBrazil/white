@@ -77,16 +77,17 @@ public class ConfiguracaoSeguranca {
         return httpSecurity.build();
     }
 
-    @Bean
-    @Order(3)
-
-    public SecurityFilterChain resourceServerFilterChain(HttpSecurity httpSecurity){
-        httpSecurity.oauth2ResourceServer(
-                oauth2 -> oauth2.jwt(
-                        jwt -> jwt.jwkSetUri("http://localhost:8080/oauth2/jwks")
-                )
-        );
-    }
+//    @Bean
+//    @Order(3)
+//
+//    public SecurityFilterChain resourceServerFilterChain(HttpSecurity httpSecurity){
+//        httpSecurity.oauth2ResourceServer(
+//                oauth2 -> oauth2.jwt(
+//                        jwt -> jwt.jwkSetUri("http://localhost:8080/oauth2/jwks")
+//                )
+//        );
+//
+//    }
 
 
 
