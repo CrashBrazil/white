@@ -3,6 +3,7 @@ package com.byd.project.white.model;
 import com.byd.project.white.model.enums.TipoCargo;
 import com.byd.project.white.model.enums.TipoSexo;
 import com.byd.project.white.model.enums.TipoStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 public class Vendedor {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idFuncionario;
@@ -69,6 +71,7 @@ public class Vendedor {
     @OneToMany(mappedBy = "vendedor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Comissao> comissao;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "vendedorCliente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Cliente> clientes;
 
@@ -79,10 +82,4 @@ public class Vendedor {
             inverseJoinColumns = @JoinColumn(name = "idvendavendedor")
     )
     private List<Venda> vendas;
-
-
-
-
-
-
 }
