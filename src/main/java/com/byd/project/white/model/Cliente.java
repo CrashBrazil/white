@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.Length;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -24,6 +26,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+//@EqualsAndHashCode(exclude = "vendedorCliente")
 public class Cliente implements UserDetails {
 
     @Id
@@ -101,5 +104,17 @@ public class Cliente implements UserDetails {
     @Override
     public String getUsername() {
         return this.emailCliente;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Cliente cliente = (Cliente) o;
+        return Objects.equals(idCliente, cliente.idCliente) && Objects.equals(emailCliente, cliente.emailCliente) && Objects.equals(senhaCliente, cliente.senhaCliente) && Objects.equals(telefoneCliente, cliente.telefoneCliente) && sexoCliente == cliente.sexoCliente && Objects.equals(dataNascimentoCliente, cliente.dataNascimentoCliente) && Objects.equals(nomeCompletoCliente, cliente.nomeCompletoCliente) && Objects.equals(tipoMoradia, cliente.tipoMoradia) && Objects.equals(complemento, cliente.complemento) && Objects.equals(cidade, cliente.cidade) && Objects.equals(endereco, cliente.endereco) && Objects.equals(cep, cliente.cep) && cargoCliente == cliente.cargoCliente && Objects.equals(numeroResidencia, cliente.numeroResidencia);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idCliente, emailCliente, senhaCliente, telefoneCliente, sexoCliente, dataNascimentoCliente, nomeCompletoCliente, tipoMoradia, complemento, cidade, endereco, cep, cargoCliente, numeroResidencia);
     }
 }

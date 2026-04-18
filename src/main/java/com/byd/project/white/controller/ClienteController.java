@@ -23,7 +23,8 @@ public class ClienteController {
     public String authorized(@RequestParam("code") String code) {
         return "Código recebido: " + code;
     }
-    @PostMapping
+
+    @PostMapping("/Registrar")
     public DtoClienteRegistrarRequisicao criar(@RequestBody DtoClienteRegistrarRequisicao dto) {
         return clienteService.criar(dto);
     }
@@ -39,11 +40,11 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
-    public DtoClienteRegistrarRequisicao atualizar(@PathVariable UUID id, @RequestBody DtoClienteRegistrarRequisicao dto) {  // ← Recebe DtoCliente
+    public DtoClienteRegistrarRequisicao atualizar(@PathVariable UUID id, @RequestBody DtoClienteRegistrarRequisicao dto) {
         return clienteService.atualizar(id, dto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/DeletarConta/{id}")
     public void deletar(@PathVariable UUID id) {
         clienteService.deletar(id);
     }

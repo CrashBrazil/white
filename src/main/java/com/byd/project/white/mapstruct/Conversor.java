@@ -4,6 +4,7 @@ import com.byd.project.white.model.Cliente;
 import com.byd.project.white.model.Vendedor;
 import com.byd.project.white.requisicao.DtoClienteRegistrarRequisicao;
 import com.byd.project.white.requisicao.DtoVendedor;
+import com.byd.project.white.resposta.DtoClienteRegistrarResposta;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,8 +12,10 @@ import java.util.stream.Collectors;
 
 @Component
 public class Conversor {
+
     public DtoClienteRegistrarRequisicao toDto(Cliente cliente) {
         if (cliente == null) return null;
+
 
         DtoClienteRegistrarRequisicao dto = new DtoClienteRegistrarRequisicao();
         dto.setNomeCompletoCliente(cliente.getNomeCompletoCliente());

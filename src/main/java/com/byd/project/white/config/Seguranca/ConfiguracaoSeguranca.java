@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -52,7 +53,7 @@ public class ConfiguracaoSeguranca {
     @Order(1)
     public SecurityFilterChain ausecurityFilterChain(HttpSecurity httpSecurity){
         httpSecurity
-                .securityMatcher("/oauth2/**", "/.well-known/**", "/Login")
+                .securityMatcher("/oauth2/**", "/.well-known/**")
                 .oauth2AuthorizationServer((authorizationServer) -> authorizationServer
                 .oidc(Customizer.withDefaults())
         );
@@ -66,6 +67,29 @@ public class ConfiguracaoSeguranca {
     }
     @Bean
     @Order(2)
+    public SecurityFilterChain resourceServerFilterChain(HttpSecurity httpSecurity){
+
+        httpSecurity
+                .oauth2ResourceServer(
+                        oauth2 -> oauth2.jwt(
+                                jwt -> jwt.jwkSetUri("http://localhost:8080/oauth2/jwks")
+                        )
+                );
+        httpSecurity
+                .securityMatcher("/White/Registrar","/White/DeletarConta/{id}")
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.POST,"/White/Registrar").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"/White/DeletarConta/{id}").authenticated()
+                )
+                .sessionManagement(configurer ->
+                        configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2ResourceServer((resourceServer) -> resourceServer
+                        .jwt(Customizer.withDefaults()));
+
+        return httpSecurity.build();
+    }
+    @Bean
+    @Order(3)
     public SecurityFilterChain whitesecurityFilterChain(HttpSecurity httpSecurity) throws Exception{
          httpSecurity
                 .formLogin(Customizer.withDefaults())
@@ -77,17 +101,7 @@ public class ConfiguracaoSeguranca {
         return httpSecurity.build();
     }
 
-//    @Bean
-//    @Order(3)
-//
-//    public SecurityFilterChain resourceServerFilterChain(HttpSecurity httpSecurity){
-//        httpSecurity.oauth2ResourceServer(
-//                oauth2 -> oauth2.jwt(
-//                        jwt -> jwt.jwkSetUri("http://localhost:8080/oauth2/jwks")
-//                )
-//        );
-//
-//    }
+
 
 
 
