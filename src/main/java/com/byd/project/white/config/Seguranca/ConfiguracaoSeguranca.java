@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -45,10 +46,12 @@ import java.util.UUID;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@AllArgsConstructor
 public class ConfiguracaoSeguranca {
 
-    private final ClienteRepository clienteRepository;
+
+    @Value("${jwk}")
+    private String jwk;
+
     @Bean
     @Order(1)
     public SecurityFilterChain ausecurityFilterChain(HttpSecurity httpSecurity){
@@ -72,14 +75,16 @@ public class ConfiguracaoSeguranca {
         httpSecurity
                 .oauth2ResourceServer(
                         oauth2 -> oauth2.jwt(
-                                jwt -> jwt.jwkSetUri("http://localhost:8080/oauth2/jwks")
+                                jwt -> jwt.jwkSetUri(jwk)
                         )
                 );
         httpSecurity
-                .securityMatcher("/White/Registrar","/White/DeletarConta/{id}")
+                .securityMatcher("/White/Registrar","/White/DeletarConta/{id}","/swagger-ui/","/swagger-ui.html")
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST,"/White/Registrar").permitAll()
                         .requestMatchers(HttpMethod.DELETE,"/White/DeletarConta/{id}").authenticated()
+                        .requestMatchers(HttpMethod.GET,"/swagger-ui/").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/swagger-ui.html").permitAll()
                 )
                 .sessionManagement(configurer ->
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -95,6 +100,7 @@ public class ConfiguracaoSeguranca {
                 .formLogin(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
+                        //http://server:port/context-path/swagger-ui.html
                         .requestMatchers(HttpMethod.GET,"/White/teste").permitAll()
                         .anyRequest().authenticated()
                 );
