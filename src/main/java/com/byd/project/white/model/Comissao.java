@@ -32,5 +32,8 @@ public class Comissao {
     @JoinColumn(name = "idVendedor", nullable = false)
     private Vendedor vendedor;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "idVenda", nullable = false)
+    private Venda vendaComissao;
 
 }

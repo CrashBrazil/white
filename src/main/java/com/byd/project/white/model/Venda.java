@@ -3,33 +3,34 @@ package com.byd.project.white.model;
 import com.byd.project.white.model.enums.TipoPagamento;
 import com.byd.project.white.model.enums.TipoStatus;
 import jakarta.persistence.*;
-
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
 @Entity
 public class Venda {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idVenda;
 
     @NotNull
-    private String dataVenda;
+    private LocalDateTime dataVenda;
 
     @NotNull
     private String veiculoVendido;
 
-    @NotNull
-    private String vendedorResponsavelVenda;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idVendedor", nullable = false)
+    private Vendedor vendedorVenda;
 
     @NotNull
     private BigDecimal valorVenda;
@@ -45,15 +46,11 @@ public class Venda {
     @NotNull
     private TipoPagamento tipoPagamento;
 
-    @ManyToMany(mappedBy = "vendas", fetch = FetchType.LAZY)
-    private List<Vendedor> vendedores;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idVendaCliente", nullable = false)
-    private Cliente ClienteVenda;
+    @JoinColumn(name = "idCliente", nullable = false)
+    private Cliente clienteVenda;
 
-    @OneToMany(mappedBy = "vendaVeiculo")
-    private List<Veiculo> veiculosVenda;
-
+    //@OneToMany(mappedBy = "vendaVeiculo")
+    //private List<Veiculo> veiculosVenda;
 
 }
