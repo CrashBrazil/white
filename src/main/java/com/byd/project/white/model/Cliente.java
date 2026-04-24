@@ -69,7 +69,7 @@ public class Cliente {
     private Vendedor vendedorCliente;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "ClienteVenda")
+    @OneToMany(mappedBy = "clienteVenda")
     private List<Venda> VendaCliente;
 
 

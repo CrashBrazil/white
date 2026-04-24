@@ -6,6 +6,7 @@ import com.byd.project.white.repository.VendedorRepository;
 import com.byd.project.white.util.MapStruct;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,11 +15,20 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class VendedorService {
+
     private final VendedorRepository vendedorRepository;
+
     private final MapStruct mapStruct;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public DtoVendedor criar(DtoVendedor dto) {
         Vendedor vendedor = mapStruct.toEntity(dto);
+
+        String senhaCodificada = passwordEncoder.encode(dto.getSenha());
+        vendedor.setSenha(senhaCodificada);
+
         Vendedor savedVendedor = vendedorRepository.save(vendedor);
         return mapStruct.toDto(savedVendedor);
     }
@@ -38,6 +48,10 @@ public class VendedorService {
                 .orElseThrow(() -> new RuntimeException("Vendedor não encontrado"));
 
         if (dto.getNomeCompleto() != null) vendedor.setNomeCompleto(dto.getNomeCompleto());
+        if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
+            String novaSenhaCodificada = passwordEncoder.encode(dto.getSenha());
+            vendedor.setSenha(novaSenhaCodificada);
+        }
         if (dto.getEndereco() != null) vendedor.setEndereco(dto.getEndereco());
         if (dto.getTelefone() != null) vendedor.setTelefone(dto.getTelefone());
         if (dto.getEmail() != null) vendedor.setEmail(dto.getEmail());
@@ -48,6 +62,9 @@ public class VendedorService {
         return mapStruct.toDto(updatedVendedor);
     }
 
+    public boolean validarSenha(String senhaPlain, String senhaHash) {
+        return passwordEncoder.matches(senhaPlain, senhaHash);
+    }
     public void deletar(UUID id) {
         Vendedor vendedor = vendedorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Vendedor não encontrado"));
