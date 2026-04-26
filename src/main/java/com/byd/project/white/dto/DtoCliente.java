@@ -17,5 +17,6 @@ public class DtoCliente {
     private String cidade;
     private String endereco;
     private String cep;
+    private String senhaCliente;
     private UUID idVendedor;
 }

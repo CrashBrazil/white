@@ -21,6 +21,7 @@ public class MapStruct {
 
         DtoCliente dto = new DtoCliente();
         dto.setNomeCompletoCliente(cliente.getNomeCompletoCliente());
+        dto.setSenhaCliente(cliente.getSenhaCliente());
         dto.setEmailCliente(cliente.getEmailCliente());
         dto.setTelefoneCliente(cliente.getTelefoneCliente());
         dto.setSexoCliente(cliente.getSexoCliente() != null ? cliente.getSexoCliente().name() : null);
@@ -39,6 +40,7 @@ public class MapStruct {
 
         Cliente cliente = new Cliente();
         cliente.setNomeCompletoCliente(dto.getNomeCompletoCliente());
+        cliente.setSenhaCliente(dto.getSenhaCliente());
         cliente.setEmailCliente(dto.getEmailCliente());
         cliente.setTelefoneCliente(dto.getTelefoneCliente());
         cliente.setDataNascimentoCliente(dto.getDataNascimentoCliente());

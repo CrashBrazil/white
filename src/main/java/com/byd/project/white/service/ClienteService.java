@@ -8,6 +8,8 @@ import com.byd.project.white.repository.ClienteRepository;
 import com.byd.project.white.repository.VendedorRepository;
 import com.byd.project.white.util.MapStruct;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,16 +20,29 @@ import java.util.UUID;
 public class ClienteService {
 
     private final ClienteRepository repository;
+
     private final VendedorRepository vendedorRepository;
+
     private final MapStruct mapStruct;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     public DtoCliente criar(DtoCliente dto) {
         Vendedor vendedor = vendedorRepository.findById(dto.getIdVendedor())
                 .orElseThrow(() -> new RuntimeException("Vendedor não encontrado!"));
+
         Cliente cliente = mapStruct.toEntity(dto);
         cliente.setSexoCliente(TipoSexo.valueOf(dto.getSexoCliente()));
         cliente.setVendedorCliente(vendedor);
+
+        if (dto.getSenhaCliente() != null && !dto.getSenhaCliente().isEmpty()) {
+            String senhaCodificada = bCryptPasswordEncoder.encode(dto.getSenhaCliente());
+            cliente.setSenhaCliente(senhaCodificada);
+        } else {
+            throw new RuntimeException("Senha do cliente é obrigatória");
+        }
 
         Cliente savedCliente = repository.save(cliente);
         return mapStruct.toDto(savedCliente);
@@ -51,6 +66,10 @@ public class ClienteService {
 
         if (dto.getNomeCompletoCliente() != null)
             cliente.setNomeCompletoCliente(dto.getNomeCompletoCliente());
+        if (dto.getSenhaCliente() != null && !dto.getSenhaCliente().isEmpty()) {
+            String novaSenhaCodificada = bCryptPasswordEncoder.encode(dto.getSenhaCliente());
+            cliente.setSenhaCliente(novaSenhaCodificada);
+        }
         if (dto.getEmailCliente() != null)
             cliente.setEmailCliente(dto.getEmailCliente());
         if (dto.getTelefoneCliente() != null)
@@ -72,6 +91,9 @@ public class ClienteService {
         return mapStruct.toDto(updatedCliente);
     }
 
+    public boolean validarSenha(String senhaPlain, String senhaHash) {
+        return bCryptPasswordEncoder.matches(senhaPlain, senhaHash);
+    }
 
     public void deletar(UUID id) {
         repository.deleteById(id);

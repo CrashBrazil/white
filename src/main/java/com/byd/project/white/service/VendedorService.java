@@ -6,7 +6,7 @@ import com.byd.project.white.repository.VendedorRepository;
 import com.byd.project.white.util.MapStruct;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,12 +21,12 @@ public class VendedorService {
     private final MapStruct mapStruct;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public DtoVendedor criar(DtoVendedor dto) {
         Vendedor vendedor = mapStruct.toEntity(dto);
 
-        String senhaCodificada = passwordEncoder.encode(dto.getSenha());
+        String senhaCodificada = bCryptPasswordEncoder.encode(dto.getSenha());
         vendedor.setSenha(senhaCodificada);
 
         Vendedor savedVendedor = vendedorRepository.save(vendedor);
@@ -49,7 +49,7 @@ public class VendedorService {
 
         if (dto.getNomeCompleto() != null) vendedor.setNomeCompleto(dto.getNomeCompleto());
         if (dto.getSenha() != null && !dto.getSenha().isEmpty()) {
-            String novaSenhaCodificada = passwordEncoder.encode(dto.getSenha());
+            String novaSenhaCodificada = bCryptPasswordEncoder.encode(dto.getSenha());
             vendedor.setSenha(novaSenhaCodificada);
         }
         if (dto.getEndereco() != null) vendedor.setEndereco(dto.getEndereco());
@@ -63,8 +63,9 @@ public class VendedorService {
     }
 
     public boolean validarSenha(String senhaPlain, String senhaHash) {
-        return passwordEncoder.matches(senhaPlain, senhaHash);
+        return bCryptPasswordEncoder.matches(senhaPlain, senhaHash);
     }
+
     public void deletar(UUID id) {
         Vendedor vendedor = vendedorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Vendedor não encontrado"));

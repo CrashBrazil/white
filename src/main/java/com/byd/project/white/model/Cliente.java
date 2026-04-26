@@ -60,6 +60,9 @@ public class Cliente {
     @NotNull
     private String cep;
 
+    @NotNull
+    private String senhaCliente;
+
     private String numeroResidencia;
 
 
