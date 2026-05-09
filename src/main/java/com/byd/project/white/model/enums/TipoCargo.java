@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum TipoCargo {
 
     VENDEDOR("Vendedor"),
-    CLIENTE("Cliente");
+    CLIENTE("Cliente"),
+    ADMIN("Admin");
 
     private final String VALOR;
 

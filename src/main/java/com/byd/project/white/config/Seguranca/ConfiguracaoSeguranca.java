@@ -1,12 +1,10 @@
 package com.byd.project.white.config.Seguranca;
 
-import com.byd.project.white.repository.ClienteRepository;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,20 +17,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
@@ -79,12 +68,25 @@ public class ConfiguracaoSeguranca {
                         )
                 );
         httpSecurity
-                .securityMatcher("/White/Registrar","/White/DeletarConta/{id}","/swagger-ui/","/swagger-ui.html")
+                .securityMatcher("/white/**","/swagger-ui/**","/v3/api-docs/**")
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST,"/White/Registrar").permitAll()
-                        .requestMatchers(HttpMethod.DELETE,"/White/DeletarConta/{id}").authenticated()
-                        .requestMatchers(HttpMethod.GET,"/swagger-ui/").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/swagger-ui.html").permitAll()
+                        //Swagger
+                        .requestMatchers(HttpMethod.GET,"/swagger-ui/**","/v3/api-docs/**").permitAll()
+
+                        //Cliente
+                        .requestMatchers(HttpMethod.POST,"/white/registrarcliente/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/white/atualizarcliente/**").permitAll()
+//                        .hasAnyRole("Cliente","ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/white/buscarporidcliente/**","/white/listarcliente/**").hasAnyRole("ADMIN","CLIENTE")
+                        .requestMatchers(HttpMethod.DELETE,"/white/deletarcontacliente/**").hasAnyRole("ADMIN","CLIENTE")
+
+                        .requestMatchers(HttpMethod.GET,"/white/teste").permitAll()
+
+                        //Vendedor
+                        .requestMatchers(HttpMethod.POST,"/white/registrarvendedor/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/white/listartodos/**", "/white/buscarporidvendedor/**").hasAnyRole("VENDEDOR","ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/white/atualizarvendedor/**").hasAnyRole("VENDEDOR","ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/white/deletarvendedor/**").hasAnyRole("VENDEDOR","ADMIN")
                 )
                 .sessionManagement(configurer ->
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -100,49 +102,12 @@ public class ConfiguracaoSeguranca {
                 .formLogin(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        //http://server:port/context-path/swagger-ui.html
-                        .requestMatchers(HttpMethod.GET,"/White/teste").permitAll()
                         .anyRequest().authenticated()
                 );
         return httpSecurity.build();
     }
 
 
-
-
-
-
-//    @Bean
-//    public UserDetailsService userDetailsService(){
-//
-//        UserDetails user = User.builder()
-//                .username("user")
-//                .password(bCryptPasswordEncoder().encode("senha"))
-//                .roles("USER")
-//                .build();
-//        return new InMemoryUserDetailsManager(user);
-//    }
-//    @Bean
-//    public UserDetailsService userDetailsService(){
-//        //
-//    }
-//    @Bean
-//    public RegisteredClientRepository registeredClientRepository() {
-//
-//        RegisteredClient registeredClient = RegisteredClient.withId(UUID.randomUUID().toString())
-//                .clientId("usuario")
-//                .clientSecret(bCryptPasswordEncoder().encode("secret"))
-//                .scope(OidcScopes.OPENID)
-//                .scope(OidcScopes.EMAIL)
-//                .redirectUri("http://localhost:8080/login/oauth2/code/Cliente_id")
-//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-//                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-//                .build();
-//
-//        //adaptar para um banco depois
-//        return new InMemoryRegisteredClientRepository(registeredClient);
-//    }
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings (){
@@ -180,6 +145,17 @@ public class ConfiguracaoSeguranca {
         }
 
         return keyPair;
+    }
+
+    @Bean
+    public OAuth2TokenCustomizer<JwtEncodingContext> oAuth2TokenCustomizer(){
+        return context -> {
+            var autho = context.getPrincipal().getAuthorities();
+
+            context.getClaims().claim("authorities", autho.stream().map(a -> a.getAuthority()).toList());
+        };
+
+
     }
 
     @Bean

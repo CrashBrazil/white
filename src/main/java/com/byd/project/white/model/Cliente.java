@@ -23,7 +23,6 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Data
 @Entity
 //@EqualsAndHashCode(exclude = "vendedorCliente")
@@ -88,12 +87,17 @@ public class Cliente implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+
         if (this.cargoCliente == TipoCargo.CLIENTE){
             return List.of(new SimpleGrantedAuthority("ROLE_CLIENTE"));
         }
-        else{
+        else if(this.cargoCliente == TipoCargo.VENDEDOR){
             return List.of(new SimpleGrantedAuthority("ROLE_VENDEDOR"));
         }
+        else {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+
     }
 
     @Override

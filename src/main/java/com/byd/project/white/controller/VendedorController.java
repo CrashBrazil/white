@@ -8,34 +8,34 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/vendedores")
+@RequestMapping("/white")
 @AllArgsConstructor
 public class VendedorController {
 
 
     private final VendedorService service;
 
-    @PostMapping
+    @PostMapping("/registrarvendedor")
     public DtoVendedor criar(@RequestBody DtoVendedor dto) {
         return service.criar(dto);
     }
 
-    @GetMapping
+    @GetMapping("/listartodos")
     public List<DtoVendedor> listarTodos() {
         return service.listarTodos();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/buscarporidvendedor/{id}")
     public DtoVendedor buscarPorId(@PathVariable UUID id) {
         return service.buscarPorId(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/atualizarvendedor/{id}")
     public DtoVendedor atualizar(@PathVariable UUID id, @RequestBody DtoVendedor dto) {
         return service.atualizar(id, dto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deletarvendedor/{id}")
     public void deletar(@PathVariable UUID id) {
         service.deletar(id);
     }

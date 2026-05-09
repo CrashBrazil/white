@@ -10,17 +10,23 @@ import lombok.AllArgsConstructor;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Vendedor {
+public class Vendedor implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -82,4 +88,39 @@ public class Vendedor {
             inverseJoinColumns = @JoinColumn(name = "idvendavendedor")
     )
     private List<Venda> vendas;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.cargo == TipoCargo.CLIENTE){
+            return List.of(new SimpleGrantedAuthority("ROLE_CLIENTE"));
+        }
+        else if(this.cargo == TipoCargo.VENDEDOR){
+            return List.of(new SimpleGrantedAuthority("ROLE_VENDEDOR"));
+        }
+        else {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Vendedor vendedor = (Vendedor) o;
+        return Objects.equals(idFuncionario, vendedor.idFuncionario);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(idFuncionario);
+    }
+
+    @Override
+    public @Nullable String getPassword() {
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
 }
