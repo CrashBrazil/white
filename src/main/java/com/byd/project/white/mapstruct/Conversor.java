@@ -1,24 +1,23 @@
-package com.byd.project.white.mapstruct;
+package com.byd.project.white.util;
 
-import com.byd.project.white.model.Cliente;
-import com.byd.project.white.model.Vendedor;
-import com.byd.project.white.requisicao.DtoClienteRegistrarRequisicao;
-import com.byd.project.white.requisicao.DtoVendedor;
-import com.byd.project.white.resposta.DtoClienteRegistrarResposta;
+import com.byd.project.white.dto.*;
+import com.byd.project.white.model.*;
+import com.byd.project.white.model.enums.TipoStatus;
+import com.byd.project.white.model.enums.TipoStatusVeiculo;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class Conversor {
+public class MapStruct {
 
-    public DtoClienteRegistrarRequisicao toDto(Cliente cliente) {
+    public DtoCliente toDto(Cliente cliente) {
         if (cliente == null) return null;
 
-
-        DtoClienteRegistrarRequisicao dto = new DtoClienteRegistrarRequisicao();
+        DtoCliente dto = new DtoCliente();
         dto.setNomeCompletoCliente(cliente.getNomeCompletoCliente());
+        dto.setSenhaCliente(cliente.getSenhaCliente());
         dto.setEmailCliente(cliente.getEmailCliente());
         dto.setTelefoneCliente(cliente.getTelefoneCliente());
         dto.setSexoCliente(cliente.getSexoCliente() != null ? cliente.getSexoCliente().name() : null);
@@ -32,11 +31,12 @@ public class Conversor {
         return dto;
     }
 
-    public Cliente toEntity(DtoClienteRegistrarRequisicao dto) {
+    public Cliente toEntity(DtoCliente dto) {
         if (dto == null) return null;
 
         Cliente cliente = new Cliente();
         cliente.setNomeCompletoCliente(dto.getNomeCompletoCliente());
+        cliente.setSenhaCliente(dto.getSenhaCliente());
         cliente.setEmailCliente(dto.getEmailCliente());
         cliente.setTelefoneCliente(dto.getTelefoneCliente());
         cliente.setDataNascimentoCliente(dto.getDataNascimentoCliente());
@@ -88,7 +88,103 @@ public class Conversor {
         return vendedor;
     }
 
-    public List<DtoClienteRegistrarRequisicao> toDtoListCliente(List<Cliente> clientes) {
+    public DtoComissao toDto(Comissao comissao) {
+        if (comissao == null) return null;
+
+        DtoComissao dto = new DtoComissao();
+        dto.setIdComissao(comissao.getIdComissao());
+        dto.setTaxa(comissao.getTaxa());
+        dto.setStatus(comissao.getStatus() != null ? comissao.getStatus().name() : null);
+        dto.setValorComissaoFinal(comissao.getValorComissaoFinal());
+        dto.setIdVendedor(comissao.getVendedor() != null ? comissao.getVendedor().getIdFuncionario() : null);
+        dto.setIdVenda(comissao.getVendaComissao() != null ? comissao.getVendaComissao().getIdVenda() : null);
+
+        return dto;
+    }
+
+    public Comissao toEntity(DtoComissao dto) {
+        if (dto == null) return null;
+
+        Comissao comissao = new Comissao();
+        comissao.setIdComissao(dto.getIdComissao());
+        comissao.setTaxa(dto.getTaxa());
+        if (dto.getStatus() != null) {
+            comissao.setStatus(TipoStatus.valueOf(dto.getStatus()));
+        }
+        comissao.setValorComissaoFinal(dto.getValorComissaoFinal());
+
+        return comissao;
+    }
+
+    public DtoVenda toDto(Venda venda) {
+        if (venda == null) return null;
+        DtoVenda dto = new DtoVenda();
+        dto.setIdVenda(venda.getIdVenda());
+        dto.setDataVenda(venda.getDataVenda());
+        dto.setVeiculoVendido(venda.getVeiculoVendido());
+        dto.setIdVendedor(venda.getVendedorVenda() != null ? venda.getVendedorVenda().getIdFuncionario() : null);
+        dto.setValorVenda(venda.getValorVenda());
+        dto.setDescontoVenda(venda.getDescontoVenda());
+        dto.setValorFinalVenda(venda.getValorFinalVenda());
+        dto.setStatusVenda(venda.getStatusVenda() != null ? venda.getStatusVenda().name() : null);
+        dto.setTipoPagamento(venda.getTipoPagamento() != null ? venda.getTipoPagamento().name() : null);
+        dto.setIdCliente(venda.getClienteVenda() != null ? venda.getClienteVenda().getIdCliente() : null);
+
+        return dto;
+    }
+
+    public Venda toEntity(DtoVenda dto) {
+        if (dto == null) return null;
+        Venda venda = new Venda();
+        venda.setIdVenda(dto.getIdVenda());
+        venda.setDataVenda(dto.getDataVenda());
+        venda.setVeiculoVendido(dto.getVeiculoVendido());
+        venda.setValorVenda(dto.getValorVenda());
+        venda.setDescontoVenda(dto.getDescontoVenda());
+        venda.setValorFinalVenda(dto.getValorFinalVenda());
+
+        return venda;
+    }
+
+    public DtoVeiculo toDto(Veiculo veiculo) {
+        if (veiculo == null) return null;
+        DtoVeiculo dto = new DtoVeiculo();
+        dto.setIdVeiculo(veiculo.getIdVeiculo());
+        dto.setModeloVeiculo(veiculo.getModeloVeiculo());
+        dto.setAnoVeiculo(veiculo.getAnoVeiculo());
+        dto.setCorVeiculo(veiculo.getCorVeiculo());
+        dto.setQuilometragem(veiculo.getQuilometragem());
+        dto.setCustoVeiculo(veiculo.getCustoVeiculo());
+        dto.setDataEntrada(veiculo.getDataEntrada());
+        dto.setStatusVeiculo(veiculo.getStatusVeiculo() != null ? veiculo.getStatusVeiculo().name() : null);
+        dto.setMarcaCarro(veiculo.getMarcaCarro());
+        dto.setPlacaCarro(veiculo.getPlacaCarro());
+        dto.setDataSaida(veiculo.getDataSaida());
+        dto.setIdVenda(veiculo.getVendaVeiculo() != null ? veiculo.getVendaVeiculo().getIdVenda() : null);
+        return dto;
+    }
+
+    public Veiculo toEntity(DtoVeiculo dto) {
+        if (dto == null) return null;
+        Veiculo veiculo = new Veiculo();
+        veiculo.setIdVeiculo(dto.getIdVeiculo());
+        veiculo.setModeloVeiculo(dto.getModeloVeiculo());
+        veiculo.setAnoVeiculo(dto.getAnoVeiculo());
+        veiculo.setCorVeiculo(dto.getCorVeiculo());
+        veiculo.setQuilometragem(dto.getQuilometragem());
+        veiculo.setCustoVeiculo(dto.getCustoVeiculo());
+        veiculo.setDataEntrada(dto.getDataEntrada());
+        if (dto.getStatusVeiculo() != null) {
+            veiculo.setStatusVeiculo(TipoStatusVeiculo.valueOf(dto.getStatusVeiculo()));
+        }
+        veiculo.setMarcaCarro(dto.getMarcaCarro());
+        veiculo.setPlacaCarro(dto.getPlacaCarro());
+        veiculo.setDataSaida(dto.getDataSaida());
+
+        return veiculo;
+    }
+
+    public List<DtoCliente> toDtoListCliente(List<Cliente> clientes) {
         if (clientes == null) return null;
         return clientes.stream()
                 .map(this::toDto)
@@ -97,6 +193,25 @@ public class Conversor {
 
     public List<DtoVendedor> toDtoListVendedor(List<Vendedor> vendedores) {
         return vendedores.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<DtoComissao> toDtoListComissao(List<Comissao> comissoes) {
+        if (comissoes == null) return null;
+        return comissoes.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<DtoVenda> toDtoListVenda(List<Venda> vendas) {
+        if (vendas == null) return null;
+        return vendas.stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    public List<DtoVeiculo> toDtoListVeiculo(List<Veiculo> veiculos) {
+        if (veiculos == null) return null;
+        return veiculos.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
     }

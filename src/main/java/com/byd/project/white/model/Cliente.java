@@ -2,15 +2,13 @@ package com.byd.project.white.model;
 
 import com.byd.project.white.model.enums.TipoCargo;
 import com.byd.project.white.model.enums.TipoSexo;
-import com.byd.project.white.repository.ClienteRepository;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -83,7 +81,10 @@ public class Cliente implements UserDetails {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Vendedor vendedorCliente;
 
-    @OneToMany(mappedBy = "ClienteVenda")
+
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "clienteVenda")
     private List<Venda> VendaCliente;
 
     @Override
