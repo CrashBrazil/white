@@ -2,6 +2,7 @@ package com.byd.project.white.service;
 
 
 import com.byd.project.white.dto.DtoComissao;
+import com.byd.project.white.mapstruct.MapManual;
 import com.byd.project.white.model.Comissao;
 import com.byd.project.white.model.Venda;
 import com.byd.project.white.model.Vendedor;
@@ -9,7 +10,6 @@ import com.byd.project.white.model.enums.TipoStatus;
 import com.byd.project.white.repository.ComissaoRepository;
 import com.byd.project.white.repository.VendaRepository;
 import com.byd.project.white.repository.VendedorRepository;
-import com.byd.project.white.util.MapStruct;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class ComissaoService {
     private VendedorRepository vendedorRepository;
 
     @Autowired
-    private MapStruct mapStruct;
+    private MapManual mapManual;
 
     @Autowired
     private VendaRepository vendaRepository;
@@ -41,7 +41,7 @@ public class ComissaoService {
         Venda venda = vendaRepository.findById(dto.getIdVenda())
                 .orElseThrow(() -> new RuntimeException("Venda não encontrada!"));
 
-        Comissao comissao = mapStruct.toEntity(dto);
+        Comissao comissao = mapManual.toEntity(dto);
         comissao.setVendedor(vendedor);
         comissao.setVendaComissao(venda);
 
@@ -51,17 +51,17 @@ public class ComissaoService {
         }
 
         Comissao saved = comissaoRepository.save(comissao);
-        return mapStruct.toDto(saved);
+        return mapManual.toDto(saved);
     }
 
     public List<DtoComissao> listarTodos(){
-        return mapStruct.toDtoListComissao(comissaoRepository.findAll());
+        return mapManual.toDtoListComissao(comissaoRepository.findAll());
     }
 
     public DtoComissao buscarPorId(UUID id) {
         Comissao comissao = comissaoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Comissão não encontrada!"));
-        return mapStruct.toDto(comissao);
+        return mapManual.toDto(comissao);
     }
 
     public DtoComissao atualizar(UUID id, DtoComissao dto) {
@@ -84,7 +84,7 @@ public class ComissaoService {
         }
 
         Comissao updated = comissaoRepository.save(comissao);
-        return mapStruct.toDto(updated);
+        return mapManual.toDto(updated);
     }
 
     public void deletar(UUID id) {

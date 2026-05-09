@@ -1,4 +1,4 @@
-package com.byd.project.white.requisicao;
+package com.byd.project.white.dto;
 
 import com.byd.project.white.model.enums.TipoCargo;
 import com.byd.project.white.model.enums.TipoSexo;

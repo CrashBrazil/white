@@ -1,6 +1,7 @@
 package com.byd.project.white.service;
 
 import com.byd.project.white.dto.DtoVenda;
+import com.byd.project.white.mapstruct.MapManual;
 import com.byd.project.white.model.Cliente;
 import com.byd.project.white.model.Venda;
 import com.byd.project.white.model.Vendedor;
@@ -9,7 +10,6 @@ import com.byd.project.white.model.enums.TipoStatus;
 import com.byd.project.white.repository.ClienteRepository;
 import com.byd.project.white.repository.VendaRepository;
 import com.byd.project.white.repository.VendedorRepository;
-import com.byd.project.white.util.MapStruct;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
@@ -24,7 +24,7 @@ public class VendaService {
     private final VendaRepository vendaRepository;
     private final VendedorRepository vendedorRepository;
     private final ClienteRepository clienteRepository;
-    private final MapStruct mapStruct;
+    private final MapManual mapManual;
 
     public DtoVenda criar(DtoVenda dto) {
         Vendedor vendedor = vendedorRepository.findById(dto.getIdVendedor())
@@ -32,7 +32,7 @@ public class VendaService {
         Cliente cliente = clienteRepository.findById(dto.getIdCliente())
                 .orElseThrow(() -> new RuntimeException("cliente não encontrado!"));
 
-        Venda venda = mapStruct.toEntity(dto);
+        Venda venda = mapManual.toEntity(dto);
         venda.setVendedorVenda(vendedor);
         venda.setClienteVenda(cliente);
 
@@ -47,17 +47,17 @@ public class VendaService {
         }
 
         Venda saved = vendaRepository.save(venda);
-        return mapStruct.toDto(saved);
+        return mapManual.toDto(saved);
     }
 
     public List<DtoVenda> listarTodas() {
-        return mapStruct.toDtoListVenda(vendaRepository.findAll());
+        return mapManual.toDtoListVenda(vendaRepository.findAll());
     }
 
     public DtoVenda buscarPorId(UUID id) {
         Venda venda = vendaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Venda não encontrada"));
-        return mapStruct.toDto(venda);
+        return mapManual.toDto(venda);
     }
 
     public DtoVenda atualizar(UUID id, DtoVenda dto) {
@@ -83,7 +83,7 @@ public class VendaService {
         }
 
         Venda updated = vendaRepository.save(venda);
-        return mapStruct.toDto(updated);
+        return mapManual.toDto(updated);
     }
 
     public void deletar(UUID id) {

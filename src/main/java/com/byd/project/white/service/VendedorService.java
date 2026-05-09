@@ -1,11 +1,10 @@
 package com.byd.project.white.service;
 
 import com.byd.project.white.dto.DtoVendedor;
+import com.byd.project.white.mapstruct.MapManual;
 import com.byd.project.white.model.Vendedor;
 import com.byd.project.white.repository.VendedorRepository;
-import com.byd.project.white.util.MapStruct;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,29 +17,29 @@ public class VendedorService {
 
     private final VendedorRepository vendedorRepository;
 
-    private final MapStruct mapStruct;
+    private final MapManual mapManual;
 
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public DtoVendedor criar(DtoVendedor dto) {
-        Vendedor vendedor = mapStruct.toEntity(dto);
+        Vendedor vendedor = mapManual.toEntity(dto);
 
         String senhaCodificada = bCryptPasswordEncoder.encode(dto.getSenha());
         vendedor.setSenha(senhaCodificada);
 
         Vendedor savedVendedor = vendedorRepository.save(vendedor);
-        return mapStruct.toDto(savedVendedor);
+        return mapManual.toDto(savedVendedor);
     }
 
     public List<DtoVendedor> listarTodos() {
-        return mapStruct.toDtoListVendedor(vendedorRepository.findAll());
+        return mapManual.toDtoListVendedor(vendedorRepository.findAll());
     }
 
     public DtoVendedor buscarPorId(UUID id) {
         Vendedor vendedor = vendedorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Vendedor não encontrado"));
-        return mapStruct.toDto(vendedor);
+        return mapManual.toDto(vendedor);
     }
 
     public DtoVendedor atualizar(UUID id, DtoVendedor dto) {
@@ -59,7 +58,7 @@ public class VendedorService {
         if (dto.getStatus() != null) vendedor.setStatus(dto.getStatus());
 
         Vendedor updatedVendedor = vendedorRepository.save(vendedor);
-        return mapStruct.toDto(updatedVendedor);
+        return mapManual.toDto(updatedVendedor);
     }
 
     public boolean validarSenha(String senhaPlain, String senhaHash) {

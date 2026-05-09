@@ -1,12 +1,12 @@
 package com.byd.project.white.service;
 
 import com.byd.project.white.dto.DtoVeiculo;
+import com.byd.project.white.mapstruct.MapManual;
 import com.byd.project.white.model.Veiculo;
 import com.byd.project.white.model.Venda;
 import com.byd.project.white.model.enums.TipoStatusVeiculo;
 import com.byd.project.white.repository.VeiculoRepository;
 import com.byd.project.white.repository.VendaRepository;
-import com.byd.project.white.util.MapStruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,27 +23,27 @@ public class VeiculoService {
     private VendaRepository vendaRepository;
 
     @Autowired
-    private MapStruct mapStruct;
+    private MapManual mapManual;
 
     public DtoVeiculo criar(DtoVeiculo dto) {
-        Veiculo veiculo = mapStruct.toEntity(dto);
+        Veiculo veiculo = mapManual.toEntity(dto);
         if (dto.getIdVenda() != null) {
             Venda venda = vendaRepository.findById(dto.getIdVenda())
                     .orElseThrow(() -> new RuntimeException("Venda não encontrada"));
             veiculo.setVendaVeiculo(venda);
         }
         Veiculo saved = veiculoRepository.save(veiculo);
-        return mapStruct.toDto(saved);
+        return mapManual.toDto(saved);
     }
 
     public List<DtoVeiculo> listarTodos() {
-        return mapStruct.toDtoListVeiculo(veiculoRepository.findAll());
+        return mapManual.toDtoListVeiculo(veiculoRepository.findAll());
     }
 
     public DtoVeiculo buscarPorId(UUID id) {
         Veiculo veiculo = veiculoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Veículo não encontrado"));
-        return mapStruct.toDto(veiculo);
+        return mapManual.toDto(veiculo);
     }
 
     public DtoVeiculo atualizar(UUID id, DtoVeiculo dto) {
@@ -69,7 +69,7 @@ public class VeiculoService {
         }
 
         Veiculo updated = veiculoRepository.save(veiculo);
-        return mapStruct.toDto(updated);
+        return mapManual.toDto(updated);
     }
 
     public void deletar(UUID id) {

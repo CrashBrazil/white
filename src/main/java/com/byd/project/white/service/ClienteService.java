@@ -1,39 +1,26 @@
 package com.byd.project.white.service;
 
 import com.byd.project.white.dto.DtoCliente;
+import com.byd.project.white.mapstruct.MapManual;
 import com.byd.project.white.model.Cliente;
 import com.byd.project.white.model.Vendedor;
 import com.byd.project.white.model.enums.TipoSexo;
 import com.byd.project.white.repository.VendedorRepository;
-import com.byd.project.white.requisicao.DtoClienteRegistrarRequisicao;
-import com.byd.project.white.model.Cliente;
-import com.byd.project.white.model.enums.TipoCargo;
 import com.byd.project.white.repository.ClienteRepository;
-import com.byd.project.white.service.impl.ClienteServiceInterface;
-import com.byd.project.white.mapstruct.MapStruct;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import com.byd.project.white.util.MapStruct;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-@RequiredArgsConstructor
+
 public class ClienteService {
     private final ClienteRepository repository;
-
     private final VendedorRepository vendedorRepository;
-
-    private final MapStruct mapStruct;
-
-
+    private final MapManual mapStruct;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
