@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -50,7 +52,20 @@ public class Venda {
     @JoinColumn(name = "idCliente", nullable = false)
     private Cliente clienteVenda;
 
+    @OneToMany(mappedBy = "vendaComissao", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Comissao> comissoes = new ArrayList<>();
+
     //@OneToMany(mappedBy = "vendaVeiculo")
     //private List<Veiculo> veiculosVenda;
+
+    public void addComisao(Comissao comissao) {
+        comissoes.add(comissao);
+        comissao.setVendaComissao(this);
+    }
+
+    public void removeComissao(Comissao comissao) {
+        comissoes.remove(comissao);
+        comissao.setVendaComissao(null);
+    }
 
 }

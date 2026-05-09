@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum TipoStatus {
-    CANCELADO("Cancelado"),
-    PENDENTE("Pendente"),
-    PROCESSANDO("Processando"),
-    EFETIVADO("Efetivado");
+public enum TipoStatusVeiculo {
+    DISPONIVEL("Disponivel"),
+    RESERVADO("Reservado"),
+    VENDIDO("Vendido"),
+    MANUTENCAO("Manutenção");
 
     private final String valor;
 }
