@@ -2,7 +2,7 @@ package com.byd.project.white.controller;
 
 import com.byd.project.white.dto.DtoComissao;
 import com.byd.project.white.service.ComissaoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,10 +10,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/comissao")
+@AllArgsConstructor
 public class ComissaoController {
 
-    @Autowired
-    private ComissaoService service;
+
+    private final ComissaoService service;
 
     @PostMapping
     public DtoComissao criar(@RequestBody DtoComissao dto) {
