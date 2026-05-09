@@ -1,60 +1,70 @@
 package com.byd.project.white.service;
 
-import com.byd.project.white.mapstruct.Conversor;
+import com.byd.project.white.dto.DtoCliente;
+import com.byd.project.white.mapstruct.MapManual;
+import com.byd.project.white.model.Cliente;
 import com.byd.project.white.model.Vendedor;
 import com.byd.project.white.model.enums.TipoSexo;
 import com.byd.project.white.repository.VendedorRepository;
-import com.byd.project.white.requisicao.DtoClienteRegistrarRequisicao;
-import com.byd.project.white.model.Cliente;
-import com.byd.project.white.model.enums.TipoCargo;
 import com.byd.project.white.repository.ClienteRepository;
-import com.byd.project.white.service.impl.ClienteServiceInterface;
-import com.byd.project.white.mapstruct.MapStruct;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
+
 public class ClienteService {
     private final ClienteRepository repository;
     private final VendedorRepository vendedorRepository;
-    private final Conversor conversor;
+    private final MapManual mapStruct;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-    public DtoClienteRegistrarRequisicao criar(DtoClienteRegistrarRequisicao dto) {
+    public DtoCliente criar(DtoCliente dto) {
         Vendedor vendedor = vendedorRepository.findById(dto.getIdVendedor())
                 .orElseThrow(() -> new RuntimeException("Vendedor não encontrado!"));
-        Cliente cliente = conversor.toEntity(dto);
+
+        Cliente cliente = mapStruct.toEntity(dto);
         cliente.setSexoCliente(TipoSexo.valueOf(dto.getSexoCliente()));
         cliente.setVendedorCliente(vendedor);
 
+        if (dto.getSenhaCliente() != null && !dto.getSenhaCliente().isEmpty()) {
+            String senhaCodificada = bCryptPasswordEncoder.encode(dto.getSenhaCliente());
+            cliente.setSenhaCliente(senhaCodificada);
+        } else {
+            throw new RuntimeException("Senha do cliente é obrigatória");
+        }
+
         Cliente savedCliente = repository.save(cliente);
-        return conversor.toDto(savedCliente);
+        return mapStruct.toDto(savedCliente);
     }
 
-    public List<DtoClienteRegistrarRequisicao> listar() {
+    public List<DtoCliente> listar() {
         List<Cliente> clientes = repository.findAll();
-        return conversor.toDtoListCliente(clientes);
+        return mapStruct.toDtoListCliente(clientes);
     }
 
-    public DtoClienteRegistrarRequisicao buscarPorId(UUID id) {
+    public DtoCliente buscarPorId(UUID id) {
         Cliente cliente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-        return conversor.toDto(cliente);
+        return mapStruct.toDto(cliente);
     }
 
-    public DtoClienteRegistrarRequisicao atualizar(UUID id, DtoClienteRegistrarRequisicao dto) {
+    public DtoCliente atualizar(UUID id, DtoCliente dto) {
         Cliente cliente = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
 
 
         if (dto.getNomeCompletoCliente() != null)
             cliente.setNomeCompletoCliente(dto.getNomeCompletoCliente());
+        if (dto.getSenhaCliente() != null && !dto.getSenhaCliente().isEmpty()) {
+            String novaSenhaCodificada = bCryptPasswordEncoder.encode(dto.getSenhaCliente());
+            cliente.setSenhaCliente(novaSenhaCodificada);
+        }
         if (dto.getEmailCliente() != null)
             cliente.setEmailCliente(dto.getEmailCliente());
         if (dto.getTelefoneCliente() != null)
@@ -73,9 +83,12 @@ public class ClienteService {
             cliente.setCep(dto.getCep());
 
         Cliente updatedCliente = repository.save(cliente);
-        return conversor.toDto(updatedCliente);
+        return mapStruct.toDto(updatedCliente);
     }
 
+    public boolean validarSenha(String senhaPlain, String senhaHash) {
+        return bCryptPasswordEncoder.matches(senhaPlain, senhaHash);
+    }
 
     public void deletar(UUID id) {
         repository.deleteById(id);

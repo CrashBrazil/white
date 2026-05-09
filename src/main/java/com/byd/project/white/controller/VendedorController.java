@@ -1,5 +1,7 @@
 package com.byd.project.white.controller;
-import com.byd.project.white.requisicao.DtoVendedor;
+
+
+import com.byd.project.white.dto.DtoVendedor;
 import com.byd.project.white.service.VendedorService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,7 @@
 package com.byd.project.white.model;
 
 import com.byd.project.white.model.enums.TipoStatus;
+import com.byd.project.white.model.enums.TipoStatusVeiculo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @Data
 @Entity
 public class Veiculo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID idVeiculo;
@@ -25,7 +27,7 @@ public class Veiculo {
     private String modeloVeiculo;
 
     @NotNull
-    private Date anoVeiculo;
+    private Integer anoVeiculo;
 
     @NotNull
     @Column(length = 12)
@@ -33,7 +35,7 @@ public class Veiculo {
 
     @NotNull
     @Column(length = 20)
-    private String quilomentragem;
+    private Long quilometragem;
 
     @NotNull
     private BigDecimal custoVeiculo;
@@ -42,19 +44,19 @@ public class Veiculo {
     private Date dataEntrada;
 
     @NotNull
-    private TipoStatus statusVendaVeiculo;
+    private TipoStatusVeiculo statusVeiculo;
 
     @NotNull
     @Column(length = 12)
     private String marcaCarro;
 
     @NotNull
-    @Column(length = 7)
+    @Column(length = 7, unique = true)
     private String placaCarro;
 
     private Date dataSaida;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idveiculovenda")
+    @JoinColumn(name = "id_venda")
     private Venda vendaVeiculo;
 }
