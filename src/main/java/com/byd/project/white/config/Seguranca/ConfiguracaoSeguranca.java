@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CorsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -24,12 +25,14 @@ import org.springframework.security.oauth2.server.authorization.token.JwtEncodin
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.web.cors.CorsConfiguration;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.List;
 import java.util.UUID;
 
 @Configuration
@@ -44,6 +47,14 @@ public class ConfiguracaoSeguranca {
     @Bean
     @Order(1)
     public SecurityFilterChain ausecurityFilterChain(HttpSecurity httpSecurity){
+        httpSecurity.cors(c -> c.configurationSource(
+                request -> {
+                    CorsConfiguration corsConfiguration = new CorsConfiguration();
+                    corsConfiguration.setAllowedOrigins(List.of("*"));
+                    corsConfiguration.setAllowCredentials(true);
+                    return corsConfiguration;
+                }
+        ));
         httpSecurity
                 .securityMatcher("/oauth2/**", "/.well-known/**")
                 .oauth2AuthorizationServer((authorizationServer) -> authorizationServer
@@ -60,6 +71,14 @@ public class ConfiguracaoSeguranca {
     @Bean
     @Order(2)
     public SecurityFilterChain resourceServerFilterChain(HttpSecurity httpSecurity){
+        httpSecurity.cors(c -> c.configurationSource(
+                request -> {
+                    CorsConfiguration corsConfiguration = new CorsConfiguration();
+                    corsConfiguration.setAllowedOrigins(List.of("*"));
+                    corsConfiguration.setAllowCredentials(true);
+                    return corsConfiguration;
+                }
+        ));
 
         httpSecurity
                 .oauth2ResourceServer(
@@ -74,19 +93,41 @@ public class ConfiguracaoSeguranca {
                         .requestMatchers(HttpMethod.GET,"/swagger-ui/**","/v3/api-docs/**").permitAll()
 
                         //Cliente
-                        .requestMatchers(HttpMethod.POST,"/white/registrarcliente/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT,"/white/atualizarcliente/**").permitAll()
-//                        .hasAnyRole("Cliente","ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/white/buscarporidcliente/**","/white/listarcliente/**").hasAnyRole("ADMIN","CLIENTE")
-                        .requestMatchers(HttpMethod.DELETE,"/white/deletarcontacliente/**").hasAnyRole("ADMIN","CLIENTE")
+                        .requestMatchers(HttpMethod.POST,"/white/cliente/registrar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/white/cliente/buscarporid/**","/white/cliente/listar/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/white/cliente/atualizar/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"/white/cliente/deletar/**").permitAll()
 
+                        //Teste
                         .requestMatchers(HttpMethod.GET,"/white/teste").permitAll()
 
                         //Vendedor
-                        .requestMatchers(HttpMethod.POST,"/white/registrarvendedor/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/white/listartodos/**", "/white/buscarporidvendedor/**").hasAnyRole("VENDEDOR","ADMIN")
-                        .requestMatchers(HttpMethod.PUT,"/white/atualizarvendedor/**").hasAnyRole("VENDEDOR","ADMIN")
-                        .requestMatchers(HttpMethod.DELETE,"/white/deletarvendedor/**").hasAnyRole("VENDEDOR","ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/white/vendedor/registrar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/white/vendedor/listar/**", "/white/vendedor/buscarporid/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/white/vendedor/atualizar/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"/white/vendedor/deletar/**").permitAll()
+
+                        //Comissao
+                        .requestMatchers(HttpMethod.POST,"white/comissao/criar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"white/comissao/listar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"white/comissao/buscarporid/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"white/comissao/atualizar/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"white/comissao/deletar/**").permitAll()
+
+                        //Veiculos
+                        .requestMatchers(HttpMethod.POST,"white/veiculo/criar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"white/veiculo/listar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"white/veiculo/buscarporid/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"white/veiculo/atualizar/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"white/veiculo/deletar/**").permitAll()
+
+                        //Venda
+                        .requestMatchers(HttpMethod.POST,"white/venda/criar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"white/venda/listar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"white/venda/buscarporid/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"white/venda/atualizar/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"white/venda/deletar/**").permitAll()
+
                 )
                 .sessionManagement(configurer ->
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

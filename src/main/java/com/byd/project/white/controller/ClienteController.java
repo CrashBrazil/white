@@ -8,10 +8,11 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("white")
+@RequestMapping("white/cliente")
 @RequiredArgsConstructor
 public class ClienteController {
     private final ClienteService clienteService;
+
 
     @GetMapping("/teste")
     public String authorized(@RequestParam(value = "code", required = false)  String code) {
@@ -23,22 +24,22 @@ public class ClienteController {
         return clienteService.criar(dto);
     }
 
-    @GetMapping
+    @GetMapping("/listar")
     public List<DtoCliente> listar() {
         return clienteService.listar();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/buscarporid/{id}")
     public DtoCliente buscarPorId(@PathVariable UUID id) {
         return clienteService.buscarPorId(id);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/atualizar/{id}")
     public DtoCliente atualizar(@PathVariable UUID id, @RequestBody DtoCliente dto) {
         return clienteService.atualizar(id, dto);
     }
 
-    @DeleteMapping("/deletarcontacliente/{id}")
+    @DeleteMapping("/deletar/{id}")
     public void deletar(@PathVariable UUID id) {
         clienteService.deletar(id);
     }
