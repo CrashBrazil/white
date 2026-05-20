@@ -41,6 +41,8 @@ import java.util.UUID;
 public class ConfiguracaoSeguranca {
 
 
+
+
     @Value("${jwk}")
     private String jwk;
 
