@@ -108,25 +108,25 @@ public class ConfiguracaoSeguranca {
                         .requestMatchers(HttpMethod.DELETE,"/white/vendedor/deletar/**").permitAll()
 
                         //Comissao
-                        .requestMatchers(HttpMethod.POST,"white/comissao/criar/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"white/comissao/listar/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"white/comissao/buscarporid/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT,"white/comissao/atualizar/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE,"white/comissao/deletar/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/white/comissao/criar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/white/comissao/listar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/white/comissao/buscarporid/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/white/comissao/atualizar/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"/white/comissao/deletar/**").permitAll()
 
                         //Veiculos
-                        .requestMatchers(HttpMethod.POST,"white/veiculo/criar/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"white/veiculo/listar/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"white/veiculo/buscarporid/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT,"white/veiculo/atualizar/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE,"white/veiculo/deletar/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/white/veiculo/criar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/white/veiculo/listar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/white/veiculo/buscarporid/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/white/veiculo/atualizar/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"/white/veiculo/deletar/**").permitAll()
 
                         //Venda
-                        .requestMatchers(HttpMethod.POST,"white/venda/criar/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"white/venda/listar/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"white/venda/buscarporid/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT,"white/venda/atualizar/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE,"white/venda/deletar/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/white/venda/criar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/white/venda/listar/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/white/venda/buscarporid/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT,"/white/venda/atualizar/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE,"/white/venda/deletar/**").permitAll()
 
                 )
                 .sessionManagement(configurer ->
